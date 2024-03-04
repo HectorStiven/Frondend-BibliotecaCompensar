@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 
 export const Productos = () => {
   const [formulario, setFormulario] = useState({
