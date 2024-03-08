@@ -1,19 +1,16 @@
-import { Grid, TextField } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
+import { ButtonBaseDemo } from "./OpcionesAplicativo/Menu";
 
 export const Inicio = () => {
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          fullWidth
-          style={{ marginTop: 15, width: "90%" }}
-          size="small"
-          variant="outlined"
-          label="Tipo de Documento"
-          value=""
-        />
+
+
+      <Grid item xs={12} >
+      <ButtonBaseDemo/>
       </Grid>
-      <Grid item xs={12} sm={6}>
+
+      {/* <Grid item xs={12} sm={6}>
         <TextField
           fullWidth
           style={{ marginTop: 15, width: "90%" }}
@@ -23,6 +20,8 @@ export const Inicio = () => {
           value=""
         />
       </Grid>
+
+
       <Grid item xs={12} sm={6}>
         <TextField
           fullWidth
@@ -33,6 +32,9 @@ export const Inicio = () => {
           value=""
         />
       </Grid>
+
+
+
       <Grid item xs={12} sm={6}>
         <TextField
           fullWidth
@@ -44,6 +46,8 @@ export const Inicio = () => {
           value=""
         />
       </Grid>
+
+
       <Grid item xs={12} sm={6}>
         <TextField
           fullWidth
@@ -55,6 +59,9 @@ export const Inicio = () => {
           value=""
         />
       </Grid>
+
+
+
       <Grid item xs={12} sm={6}>
         <TextField
           fullWidth
@@ -64,7 +71,10 @@ export const Inicio = () => {
           label="Dirección"
           value=""
         />
-      </Grid>
+      </Grid> */}
+
+
+
     </Grid>
   );
 };

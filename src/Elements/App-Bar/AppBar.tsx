@@ -18,9 +18,9 @@ import { ImagenPortada } from './ImagenPortada';
 import { CustomizedSwitches } from './ModoOscuro';
 
 const pages = ['Inicio', 'Prestamos', 'Registro', "Contacto"];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout',"perfil","s"];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout', "perfil", "s"];
 
-export const ResponsiveAppBar = ({set_entrar_aplicacion}:any) => {
+export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [openDrawer, setOpenDrawer] = useState(false);
     const [openDrawer_info, setOpenDrawer_info] = useState(false);
@@ -75,22 +75,28 @@ export const ResponsiveAppBar = ({set_entrar_aplicacion}:any) => {
                             <MenuIcon onClick={handleDrawerOpen} />
 
 
-
                             <Drawer
                                 open={openDrawer}
                                 onClose={handleDrawerClose}
                             >
                                 <ImagenPortada />
-
-
                                 {pages.map((page) => (
                                     <div key={page}>
-                                        <List style={{ width: 250 }}>
+                                        <List
+                                            style={{
+                                                width: 250,
+                                                borderRadius: 8,
+                                                backgroundColor: 'white', /* Color naranja */
+                                                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                                                transition: 'background-color 0.3s ease, border 0.3s ease' /* Transición suave */ 
+                                            }}
+                                            sx={{ '&:hover': { backgroundColor: 'rgba(255, 152, 0, 0.7)',                    border: '2px solid #ff5722', /* Borde delineado */ 
+                                        } }}
+                                        >
                                             <ListItem
                                                 button
                                                 onClick={() => navigate(`/${page}`)}
                                                 sx={{
-                                                    border: "1px solid black",
                                                     borderRadius: 1,
                                                 }}
                                             >
@@ -100,7 +106,6 @@ export const ResponsiveAppBar = ({set_entrar_aplicacion}:any) => {
                                     </div>
                                 ))}
                             </Drawer>
-
 
                         </Box>
                         <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -178,35 +183,25 @@ export const ResponsiveAppBar = ({set_entrar_aplicacion}:any) => {
 
 
                                     {settings.map((setting) => (
-                                        <MenuItem style={{ width: 200,height:50 }} key={setting} onClick={handleCloseUserMenu}>
+                                        <MenuItem style={{ width: 200, height: 50 }} key={setting} onClick={handleCloseUserMenu}>
                                             <Typography textAlign="center">{setting}</Typography>
                                         </MenuItem>
 
                                     ))}
                                     <Button
                                         variant="contained"
-                                        style={{ width: 190, margin: 'auto' ,marginTop:20}}
+                                        style={{ width: 190, margin: 'auto', marginTop: 20 }}
                                         color="error"
-                                    onClick={()=>set_entrar_aplicacion(false)}
+                                        onClick={() => set_entrar_aplicacion(false)}
                                     >
                                         salir
                                     </Button>
                                 </Drawer>
-
-
-
-
-
-
                             </Menu>
                         </Box>
                     </Toolbar>
                 </Container>
             </AppBar>
-
-
-
-
         </>
     );
 }
