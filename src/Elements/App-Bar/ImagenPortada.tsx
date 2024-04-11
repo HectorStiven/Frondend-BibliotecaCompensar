@@ -12,7 +12,7 @@ export  const ImagenPortada = () => {
 export  const ImagenFondo = () => {
   return (
     <div style={{ position: "absolute", width: "100%", height: "100%", top: 0, left: 0 }}>
-      <img src="../image/fondo.jpg" alt="Instagram" style={{ width: "100%", height: "100%", objectFit: "cover", zIndex: -1,opacity: 0.5 }} />
+      <img src="../image/Background.png" alt="Instagram" style={{ width: "100%", height: "100%", objectFit: "cover", zIndex: -1}} />
     </div>
   )
 }

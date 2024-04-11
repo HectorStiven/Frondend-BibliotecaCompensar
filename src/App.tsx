@@ -19,9 +19,6 @@ export const App = () => {
     minHeight: '100vh',
   };
 
-
- 
-
   return (
     <div className="App" style={appStyle}>
       {entrar_aplicacion === false && (
