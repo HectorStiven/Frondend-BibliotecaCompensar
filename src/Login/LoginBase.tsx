@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { TextField, Button, IconButton, Grid } from "@mui/material";
+import { TextField, Button, IconButton, Grid, FormControl, Box, Typography, InputLabel, Input, Link } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { control_success } from "../Elements/alertas/alertaSucces";
 import { ImagenFondo } from "../Elements/App-Bar/ImagenPortada";
-import { Registrarse } from "./Registrarse";
 import { useDispatch } from "react-redux";
 import { login } from "./toolkit/slice/LoginSlice";
+import { Card, TextFieldCompleto, buttonMax, footerSpacing, formControl, mtComponent } from "./Styles/StyleInicio";
+import RegistrarUser from "./Registrarse";
 
 
 export const LoginBase = ({ set_entrar_aplicacion }: any) => {
@@ -30,6 +30,7 @@ export const LoginBase = ({ set_entrar_aplicacion }: any) => {
     { usuario: "miguel", contrasena: "1234" },
     { usuario: "stiven", contrasena: "1234" },
     { usuario: "jhon", contrasena: "1234" },
+    { usuario: "Gxrman.exe", contrasena: "DevHome" },
   ];
 
 
@@ -48,7 +49,7 @@ export const LoginBase = ({ set_entrar_aplicacion }: any) => {
 
     if (usuarioValido) {
       set_entrar_aplicacion(true);
-      control_success("Ingreso exitoso");
+      control_success("Bienvenido" + " " + usuario);
     } else {
       console.log("Credenciales incorrectas");
     }
@@ -57,85 +58,73 @@ export const LoginBase = ({ set_entrar_aplicacion }: any) => {
   return (
     <div>
       <ImagenFondo />
-      <Grid container alignItems="center" justifyContent="center">
-        <Grid item style={{ marginTop: 400, position: "absolute" }}>
-          <div
-            style={{
-              padding: 60,
-              borderRadius: 60,
-              border: "1px solid black",
-              width: 440,
-              height: "60%",
-              marginTop: 350,
-              backgroundColor: "white",
-            }}
-          >
-            <h1 className="login-heading">Iniciar Sesión</h1>
-            <form onSubmit={handleLogin}>
-              <div>
-                <TextField
-                  id="input-with-icon-textfield"
-                  label="Nombre"
-                  style={{ marginTop: 15, width: 270 }}
-                  value={usuario}
-                  onChange={(e) => setUsuario(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircle />
-                      </InputAdornment>
-                    ),
-                    style: { borderRadius: 20 },
-                  }}
-                  variant="outlined"
-                />
-              </div>
-              <div>
-                <TextField
-                  id="outlined-adornment-password"
-                  type={showPassword ? "text" : "password"}
-                  value={contrasena}
-                  style={{ marginTop: 15 }}
-                  onChange={(e) => setContrasena(e.target.value)}
-                  variant="outlined"
-                  label="Contraseña"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                    style: { borderRadius: 20 },
-                  }}
-                />
-              </div>
-              <div>
-                <Grid container spacing={1}>
-                  <Grid item xs={12} sm={6}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      style={{ marginTop: 15, width: "100%" }}
-                      color="success"
-                    >
-                      Iniciar Sesión
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Registrarse />
-                  </Grid>
+      <form onSubmit={handleLogin}>
+        <Grid alignItems={"center"} container spacing={0} justifyContent={"center"} direction={"column"}>
+          <Grid alignItems={"center"} item xs={11} sm={11} md={5}>
+            <Box sx={Card}>
+              <Grid alignItems={"center"} container spacing={0} justifyContent={"space-between"}>
+                <Grid alignItems={"center"} item xs={6} sm={5} md={5} sx={mtComponent}>
+                  <Typography variant="h5">
+                    Bienvenido,
+                    Por favor inicie sesion
+                  </Typography>
                 </Grid>
-              </div>
-            </form>
-          </div>
+                <Grid alignItems={"center"} item xs={6} sm={6} md={5} sx={mtComponent}>
+                  <img src="../image/Logo-Compensar.png"
+                    alt="Logo UCompensar"
+                    style={{ width: '100%' }} />
+                </Grid>
+              </Grid>
+              <Grid alignItems={"center"} container spacing={0} justifyContent={"center"}>
+                <Grid alignItems={"center"} item xs={10} sm={8} md={7}>
+                  <TextField id="standard-basic" label="Usuario" value={usuario}
+                    onChange={(e) => setUsuario(e.target.value)} variant="standard" sx={TextFieldCompleto} />
+                </Grid>
+                <Grid alignItems={"center"} item xs={10} sm={8} md={7}>
+
+                  <FormControl sx={formControl} variant="standard">
+                    <InputLabel htmlFor="standard-adornment-password">Contraseña</InputLabel>
+                    <Input
+                      id="standard-adornment-password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={contrasena}
+                      onChange={(e) => setContrasena(e.target.value)}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid alignItems={"center"} container spacing={1} justifyContent={"space-evenly"} sx={mtComponent}>
+                <Grid alignItems={"center"} item xs={8} sm={5} md={5}>
+                  <Button variant='contained' type="submit" sx={buttonMax}>
+                    INGRESAR
+                  </Button>
+                </Grid>
+                <Grid alignItems={"center"} item xs={8} sm={5} md={5}>
+                  <RegistrarUser />
+                </Grid>
+              </Grid>
+              <Grid alignItems={"center"} container spacing={1} justifyContent={"center"} sx={footerSpacing}>
+                <Grid alignItems={"center"} item xs={6}>
+                  <Link href="#" underline="none">
+                    {'¿Olvido su contraseña?'}
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </form>
     </div>
   );
 };
