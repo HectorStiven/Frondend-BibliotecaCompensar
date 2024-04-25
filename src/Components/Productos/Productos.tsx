@@ -34,9 +34,9 @@ export const Productos: React.FC = () => {
             <TabContext value={position_tab}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handleTablistChange}>                 
-                 <Tab label="Solicitar" value="1"    sx={{marginRight:"20%" }} />
-                  <Tab label="Solicitudes Activas Cartera" value="2"  sx={{marginRight:"20%" }} />
-                  <Tab label="Solicitudes Finalizadas " value="3"  sx={{marginRight:"20%" }} />
+                 <Tab label="Solicitar" value="1"    sx={{marginRight:"0%" }} />
+                  <Tab label="Solicitudes Activas Cartera" value="2"  sx={{marginRight:"0%" }} />
+                  <Tab label="Solicitudes Finalizadas " value="3"  sx={{marginRight:"0%" }} />
 
                 </TabList>
               </Box>
