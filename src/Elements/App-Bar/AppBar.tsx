@@ -48,7 +48,7 @@ export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
 
     return (
         < >
-            <AppBar position="static" style={{ backgroundColor: "orange" }}>
+            <AppBar position="static" style={{ backgroundColor: "#008e26" }}>
                 <Container maxWidth="xl" >
                     <Toolbar disableGutters >
                         <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -90,7 +90,7 @@ export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
                                                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                                                 transition: 'background-color 0.3s ease, border 0.3s ease' /* Transición suave */ 
                                             }}
-                                            sx={{ '&:hover': { backgroundColor: 'rgba(255, 152, 0, 0.7)',                    border: '2px solid #ff5722', /* Borde delineado */ 
+                                            sx={{ '&:hover': { backgroundColor: 'rgba(0,142,38,1)',                    border: '2px solid #008e26', /* Borde delineado */ 
                                         } }}
                                         >
                                             <ListItem

@@ -1,133 +1,60 @@
-import React, { useState } from "react";
-import { Grid, TextField } from "@material-ui/core";
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import React, { useState } from 'react';
+import { Box, Grid, Tab } from "@mui/material";
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { SolicitudesFinalizadas } from './SolicitudesFinalizadasC/SolicitudesFinalizadas';
+import { SolicitudesActivas } from './SolicitudesActivasC/SolicitudesActivasc';
+import { SolicitaLibro } from './SolicitaLibroC/SolicitaLibro';
 
-export const Productos = () => {
-  const [formulario, setFormulario] = useState({
-    nombre: "",
-    correo: "",
-    libro: "",
-    comentario: "",
-    campoExtra1: "",
-    campoExtra2: "",
-    campoExtra3: "",
-    campoExtra4: "",
-  });
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const Productos: React.FC = () => {
+  const [position_tab, setPositionTab] = useState("1");
 
-  const handleChange = (e:any) => {
-    const { name, value } = e.target;
-    setFormulario({
-      ...formulario,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e:any) => {
-    e.preventDefault();
-    console.log("Formulario enviado:", formulario);
+  const handleTablistChange = (event: React.SyntheticEvent, newValue: string) => {
+    setPositionTab(newValue);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid container spacing={3}>
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26'
+        }}
+      >
         <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Nombre"
-            name="nombre"
-            value={formulario.nombre}
-            onChange={handleChange}
-            variant="outlined"
-            required
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Correo Electrónico"
-            name="correo"
-            value={formulario.correo}
-            onChange={handleChange}
-            variant="outlined"
-            required
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Libro"
-            name="libro"
-            value={formulario.libro}
-            onChange={handleChange}
-            variant="outlined"
-            required
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Comentario"
-            name="comentario"
-            value={formulario.comentario}
-            onChange={handleChange}
-            variant="outlined"
-            multiline
-            rows={4}
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Campo Extra 1"
-            name="campoExtra1"
-            value={formulario.campoExtra1}
-            onChange={handleChange}
-            variant="outlined"
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Campo Extra 2"
-            name="campoExtra2"
-            value={formulario.campoExtra2}
-            onChange={handleChange}
-            variant="outlined"
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Campo Extra 3"
-            name="campoExtra3"
-            value={formulario.campoExtra3}
-            onChange={handleChange}
-            variant="outlined"
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Campo Extra 4"
-            name="campoExtra4"
-            value={formulario.campoExtra4}
-            onChange={handleChange}
-            variant="outlined"
-            style={{ margin: "8px 0", width: "95%" }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          {/* <Button type="submit" variant="contained" color="primary">
-            Solicitar Préstamo
-          </Button> */}
+          <Box
+            sx={{ mt: '20px' }}
+          >
+            <TabContext value={position_tab}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <TabList onChange={handleTablistChange}>                 
+                 <Tab label="Solicitar" value="1"    sx={{marginRight:"20%" }} />
+                  <Tab label="Solicitudes Activas Cartera" value="2"  sx={{marginRight:"20%" }} />
+                  <Tab label="Solicitudes Finalizadas " value="3"  sx={{marginRight:"20%" }} />
+
+                </TabList>
+              </Box>
+
+              <TabPanel value="1" sx={{ p: '20px 0' }}>
+                <SolicitaLibro/>
+              </TabPanel>
+
+              <TabPanel value="2" sx={{ p: '20px 0' }}>
+                <SolicitudesActivas/>
+              </TabPanel>
+              <TabPanel value="3" sx={{ p: '20px 0' }}>
+               <SolicitudesFinalizadas/>
+              </TabPanel>
+            </TabContext>
+          </Box>
         </Grid>
       </Grid>
-    </form>
-  );
-};
+    </>
+  )
+}

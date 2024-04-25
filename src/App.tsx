@@ -7,16 +7,18 @@ import { useContext, useState } from 'react';
 import { LoginBase } from './Login/LoginBase';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Grid } from '@mui/material';
 
 export const App = () => {
 
-  const [entrar_aplicacion, set_entrar_aplicacion] = useState<boolean>(false);
+  const [entrar_aplicacion, set_entrar_aplicacion] = useState<boolean>(true);
   const { modo_dark_numero } = useContext(AlertasContext);
 
   // Establece el fondo en función del valor de modo_dark_numero
   const appStyle = {
     backgroundColor: modo_dark_numero,
     minHeight: '100vh',
+
   };
 
   return (
@@ -28,9 +30,14 @@ export const App = () => {
 
       {entrar_aplicacion && (
         <Router>
-          <ResponsiveAppBar set_entrar_aplicacion={set_entrar_aplicacion} />
-
-          <RutasPrincipales />
+          <Grid container spacing={0} style={{ minHeight: '100vh' }} justifyContent="center" alignItems="center">
+            <Grid item xs={12} style={{ minHeight: '70' }}>
+              <ResponsiveAppBar set_entrar_aplicacion={set_entrar_aplicacion} />
+            </Grid>
+            <Grid item xs={11.5} style={{ minHeight: '100vh',marginTop:15}}>
+              <RutasPrincipales />
+            </Grid>
+          </Grid>
         </Router>
       )}
       <ToastContainer />
