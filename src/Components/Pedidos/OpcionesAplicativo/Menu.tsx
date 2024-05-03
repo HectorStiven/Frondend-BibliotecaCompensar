@@ -1,31 +1,38 @@
 import * as React from 'react';
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const images = [
   {
     url: '/image/menu/estudiante.webp',
     title: 'Estudiantes',
+    route: '/estudiantes'
   },
   {
     url: '/image/menu/libro.webp',
     title: 'Libros',
+    route: '/libros'
   },
   {
     url: '/image/menu/profe.jpg',
     title: 'Profesor',
+    route: '/profesores'
   },
   {
     url: '/image/menu/buscarlibro.webp',
     title: 'Buscar Libro',
+    route: '/buscarlibro'
   },
   {
     url: '/image/menu/configurardatos.webp',
     title: 'Configurar Datos ',
+    route: '/configurarDatos'
   },
   {
     url: '/image/menu/gradocolegio.webp',
     title: 'Crear Grado',
+    route: '/creargrado'
   },
 ];
 
@@ -101,10 +108,11 @@ const ImageMarked = styled('span')(({ theme }) => ({
 }));
 
 export const ButtonBaseDemo = () => {
+  const navigate = useNavigate();
   return (
     <Grid container>
       {images.map((image, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
+        <Grid item xs={12} sm={6} md={4} key={index} onClick={() => navigate(image.route)}>
           <ImageButton  style={{ width: '95%' ,margin:6}}>
             <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
             <ImageBackdrop className="MuiImageBackdrop-root" />
