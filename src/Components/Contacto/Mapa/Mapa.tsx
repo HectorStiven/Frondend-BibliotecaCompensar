@@ -31,7 +31,7 @@ export const Geolocalizacion: React.FC<IProps> = (props: IProps) => {
   },[props])
 
   useEffect(() => {
-    console.log(props);
+    // console.log(props);
       console.log(position);
   },[position]);
   

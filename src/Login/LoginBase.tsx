@@ -49,7 +49,7 @@ export const LoginBase = ({ set_entrar_aplicacion }: any) => {
 
     if (usuarioValido) {
       set_entrar_aplicacion(true);
-      control_success("Bienvenido" + " " + usuario);
+      control_success("Bienvenido " + usuario);
     } else {
       console.log("Credenciales incorrectas");
     }

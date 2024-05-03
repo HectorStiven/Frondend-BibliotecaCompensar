@@ -5,11 +5,11 @@ import { Geolocalizacion } from './Mapa/Mapa';
 
 export const Contacto = () => {
   // Estado para almacenar los datos del formulario de búsqueda
-  const [searchData, setSearchData] = useState({
-    nombre: '',
-    libro: '',
-    autor: ''
-  });
+  // const [searchData, setSearchData] = useState({
+  //   nombre: '',
+  //   libro: '',
+  //   autor: ''
+  // });
 
   // Datos de ejemplo para la DataGrid
   const [rows] = useState([
