@@ -6,34 +6,24 @@ import { useNavigate } from 'react-router-dom';
 const images = [
   {
     url: '/image/menu/estudiante.webp',
-    title: 'Estudiantes',
-    route: '/estudiantes'
+    title: 'Usuario',
+    route: '/Registro/Usuario'
   },
   {
     url: '/image/menu/libro.webp',
     title: 'Libros',
-    route: '/libros'
-  },
-  {
-    url: '/image/menu/profe.jpg',
-    title: 'Profesor',
-    route: '/profesores'
+    route: '/Registro/libros'
   },
   {
     url: '/image/menu/buscarlibro.webp',
-    title: 'Buscar Libro',
-    route: '/buscarlibro'
+    title: 'Resumen estadistico',
+    route: '/Registro/resumen_estadistico'
   },
   {
     url: '/image/menu/configurardatos.webp',
     title: 'Configurar Datos ',
-    route: '/configurarDatos'
-  },
-  {
-    url: '/image/menu/gradocolegio.webp',
-    title: 'Crear Grado',
-    route: '/creargrado'
-  },
+    route: '/Registro/confiduracion_datos'
+  }
 ];
 
 const ImageButton = styled('div')({

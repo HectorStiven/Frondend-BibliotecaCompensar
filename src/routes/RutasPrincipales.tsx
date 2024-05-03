@@ -2,9 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import { Inicio } from '../Components/Inicio/Inicio';
 import { Productos } from '../Components/Productos/Productos';
 import { Contacto } from '../Components/Contacto/Contacto';
-import { PedidoPrincipal } from '../Components/Pedidos/Pedido';
 import { Page404 } from '../Elements/Pag404/Pag404';
-import { Libros } from '../Components/Libros/Libros';
+import { RoutesRegistro } from '../Components/Pedidos/routes/RoutesRegistro';
 
 export const RutasPrincipales = () => {
   return (
@@ -13,9 +12,8 @@ export const RutasPrincipales = () => {
 
       <Route path="/Inicio" element={<Inicio />} />
       <Route path="/Prestamos" element={<Productos />} />
-      <Route path="/Registro" element={<PedidoPrincipal />} />
+      <Route path="/Registro/*" element={<RoutesRegistro />} /> {/* Utilizando la subruta aquí */}
       <Route path="/Contacto" element={<Contacto />} />
-      <Route path="/Libros" element={<Libros />} />
       <Route path="*" element={<Page404 />} />
 
     </Routes>

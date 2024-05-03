@@ -4,17 +4,11 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useEffect } from "react";
-import { Title } from "../../Elements/Titulo/Titulo";
-import { api } from "../../api/Axios";
-import { control_success } from "../../Elements/alertas/alertaSucces";
-import { control_error } from "../../Elements/alertas/alertaError";
-import { useParams } from 'react-router-dom';
+import { Title } from "../../../../Elements/Titulo/Titulo";
+import { api } from "../../../../api/Axios";
+import { control_success } from "../../../../Elements/alertas/alertaSucces";
+import { control_error } from "../../../../Elements/alertas/alertaError";
 
-interface Libro {
-    id: number;
-    titulo: string;
-    // Agrega aquí las demás propiedades de un libro.
-}
 
 interface Categoria {
     id: number;

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Grid } from '@mui/material';
-import { ButtonBaseDemo } from './OpcionesAplicativo/Menu';
+import { ButtonBaseDemo } from './Components/OpcionesAplicativo/Menu';
 
 export const PedidoPrincipal = () => {
 

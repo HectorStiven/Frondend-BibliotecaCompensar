@@ -7,7 +7,7 @@ export const Inicio = () => {
 
 
       <Grid item xs={12}>
-        <PantallaPrincipalBiblioteca />F
+        <PantallaPrincipalBiblioteca />
       </Grid>
   
 
