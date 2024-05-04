@@ -44,7 +44,7 @@ export const MenuUsuario: React.FC<MenuUsuarioProps> = ({ set_entrar_aplicacion,
       <Grid item>
         <Button
           variant="contained"
-          style={{ width: 200 ,marginTop:"141%"}}
+          style={{ width: 200 ,marginTop:"110%"}}
           color="error"
           onClick={() => set_entrar_aplicacion(false)}
         >
