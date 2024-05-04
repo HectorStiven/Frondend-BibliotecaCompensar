@@ -16,9 +16,9 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ImagenPortada } from './ImagenPortada';
 import { CustomizedSwitches } from './ModoOscuro';
+import { MenuUsuario } from '../MenuUsuario/MenuUsuario';
 
 const pages = ['Inicio', 'Prestamos', 'Registro', "Contacto"];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout', "perfil", "s"];
 
 export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -88,10 +88,13 @@ export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
                                                 borderRadius: 8,
                                                 backgroundColor: 'white', /* Color naranja */
                                                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                                                transition: 'background-color 0.3s ease, border 0.3s ease' /* Transición suave */ 
+                                                transition: 'background-color 0.3s ease, border 0.3s ease' /* Transición suave */
                                             }}
-                                            sx={{ '&:hover': { backgroundColor: 'rgba(0,142,38,1)',                    border: '2px solid #008e26', /* Borde delineado */ 
-                                        } }}
+                                            sx={{
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(0,142,38,1)', border: '2px solid #008e26', /* Borde delineado */
+                                                }
+                                            }}
                                         >
                                             <ListItem
                                                 button
@@ -181,21 +184,7 @@ export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
 
                                 >
 
-
-                                    {settings.map((setting) => (
-                                        <MenuItem style={{ width: 200, height: 50 }} key={setting} onClick={handleCloseUserMenu}>
-                                            <Typography textAlign="center">{setting}</Typography>
-                                        </MenuItem>
-
-                                    ))}
-                                    <Button
-                                        variant="contained"
-                                        style={{ width: 190, margin: 'auto', marginTop: 20 }}
-                                        color="error"
-                                        onClick={() => set_entrar_aplicacion(false)}
-                                    >
-                                        salir
-                                    </Button>
+                                    <MenuUsuario set_entrar_aplicacion={set_entrar_aplicacion} handleCloseUserMenu={handleCloseUserMenu} />
                                 </Drawer>
                             </Menu>
                         </Box>
