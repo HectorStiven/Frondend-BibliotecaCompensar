@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core";
-import { PantallaPrincipalBiblioteca } from "./Biblioteca/screens/PantallaPrincipalBiblioteca";
+import { ButtonBaseDemo } from "./components/OpcionesAplicativo/Menu";
 
 export const Inicio = () => {
   return (
@@ -7,7 +7,7 @@ export const Inicio = () => {
 
 
       <Grid item xs={12}>
-        <PantallaPrincipalBiblioteca />
+      <ButtonBaseDemo />
       </Grid>
   
 

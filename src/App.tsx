@@ -11,7 +11,7 @@ import { Grid } from '@mui/material';
 
 export const App = () => {
 
-  const [entrar_aplicacion, set_entrar_aplicacion] = useState<boolean>(false);
+  const [entrar_aplicacion, set_entrar_aplicacion] = useState<boolean>(true);
   const { modo_dark_numero } = useContext(AlertasContext);
 
   // Establece el fondo en función del valor de modo_dark_numero

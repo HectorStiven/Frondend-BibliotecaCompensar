@@ -17,7 +17,7 @@ import { ImagenPortada } from './ImagenPortada';
 import { CustomizedSwitches } from './ModoOscuro';
 import { MenuUsuario } from '../MenuUsuario/MenuUsuario';
 
-const pages = ['Inicio', 'Prestamos', 'Registro', "Contacto"];
+const pages = ['Inicio', 'Prestamos', "Contacto"];
 
 export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);

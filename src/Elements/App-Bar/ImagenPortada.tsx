@@ -50,3 +50,13 @@ export  const ImagenAutor = () => {
 }
 
 
+
+export  const ImagenfONDO = () => {
+  return (
+    <div style={{ width: "100%", marginLeft: -45,marginTop:-15, left: 0 }}>
+      <img src="../image/FONDO-COMPENSAR.jpg" alt="FONDO-COMPENSAR" style={{ width: "105%",height:480, objectFit: "cover", zIndex: -1,opacity: 0.5 }} />
+    </div>
+  )
+}
+
+

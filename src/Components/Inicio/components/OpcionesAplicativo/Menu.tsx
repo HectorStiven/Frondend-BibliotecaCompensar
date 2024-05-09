@@ -5,25 +5,36 @@ import { useNavigate } from 'react-router-dom';
 
 const images = [
   {
-    url: '/image/menu/estudiante.webp',
-    title: 'Usuario',
-    route: '/Registro/Usuario'
+    url: '/image/menu/biblioteca.jpg',
+    title: 'Biblioteca ',
+    route: '/Inicio/Biblioteca'
+  },
+  {
+    url: '/image/menu/lector.jpg',
+    title: 'Crear Lector',
+    route: '/Inicio/Usuario'
   },
   {
     url: '/image/menu/libro.webp',
-    title: 'Libros',
-    route: '/Registro/libros'
+    title: 'Crear Libros',
+    route: '/Inicio/libros'
   },
   {
     url: '/image/menu/buscarlibro.webp',
-    title: 'Resumen estadistico',
-    route: '/Registro/resumen_estadistico'
+    title: 'Reportes',
+    route: '/Inicio/resumen_estadistico'
   },
   {
     url: '/image/menu/configurardatos.webp',
     title: 'Configurar Datos ',
-    route: '/Registro/confiduracion_datos'
-  }
+    route: '/Inicio/confiduracion_datos'
+  },
+  {
+    url: '/image/menu/configurardatos.webp',
+    title: 'Buscar lectores ',
+    route: '/Inicio/confiduracion_datos'
+  },
+  
 ];
 
 const ImageButton = styled('div')({
@@ -103,7 +114,7 @@ export const ButtonBaseDemo = () => {
     <Grid container>
       {images.map((image, index) => (
         <Grid item xs={12} sm={6} md={4} key={index} onClick={() => navigate(image.route)}>
-          <ImageButton  style={{ width: '95%' ,margin:6}}>
+          <ImageButton  style={{ width: '95%' ,margin:6,height:350}}>
             <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
             <ImageBackdrop className="MuiImageBackdrop-root" />
             <Image>
