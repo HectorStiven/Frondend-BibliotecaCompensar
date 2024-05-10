@@ -1,58 +1,150 @@
-import React from 'react';
-import { Grid, TextField, Button, FormControl, InputLabel, Select, MenuItem, InputAdornment, IconButton } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import React, { useEffect, useState } from 'react';
+import { Grid, TextField, Button, Switch, FormControlLabel, FormControl, Checkbox, InputAdornment, IconButton, InputLabel, Select, MenuItem, Typography } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../Elements/Titulo/Titulo';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { api } from '../../../../api/Axios';
+
+// Definición de los campos adicionales
+interface AdditionalFields {
+    crearContrasena: string;
+    confirmarContrasena: string;
+    tipoUsuario: boolean;
+    colegioSeleccionado: string;
+    gradoSeleccionado: string; // Nuevo campo para el grado seleccionado
+}
 
 export const PantallaPrincipalUsuario = () => {
-    const [formData, setFormData] = React.useState({
-        nombres: '', // Nombres del usuario
-        apellidos: '', // Apellidos del usuario
-        telefono: '', // Teléfono del usuario
-        celular: '', // Celular del usuario
-        tipoDocumento: '', // Tipo de documento del usuario (ejemplo: cédula, pasaporte)
-        numeroDocumento: '', // Número de documento del usuario
-        tipoUsuario: '', // Tipo de usuario (ejemplo: estudiante, docente)
-        genero: '', // Género del usuario
-        ocupacion: '', // Ocupación del usuario (ejemplo: estudiante, empleado)
-        fecha_nacimiento: '', // Fecha de nacimiento del usuario
-        correoElectronico: '', // Correo electrónico del usuario
-        pais: '', // País del usuario
-        departamento: '', // Departamento del usuario
-        municipio: '', // Municipio del usuario
-        codigoPostal: '', // Código postal del usuario
-        direccion: '', // Dirección del usuario
-        nombreFamiliar: '', // Nombre del familiar de contacto
-        celularFamiliar: '', // Celular del familiar de contacto
-        parentesco: '', // Parentesco con el familiar de contacto
-        crearUsuario: false, // Indica si se debe crear un usuario en el sistema
-        crearContrasena: '',
-        mostrarContrasena: false
+    // Estado del formulario
+    const [formData, setFormData] = useState({
+        numero_identidad: "",
+        primer_nombre: "",
+        segundo_nombre: "",
+        primer_apellido: "",
+        segundo_apellido: "",
+        edad: 0,
+        fecha_nacimiento: "",
+        correo_electronico: "",
+        numero_celular: "",
     });
 
-    const handleInputChange = (field: any, value: any) => {
+    // Estado de los campos adicionales
+    const [additionalFields, setAdditionalFields] = useState<AdditionalFields>({
+        crearContrasena: '',
+        confirmarContrasena: '',
+        tipoUsuario: false,
+        colegioSeleccionado: "",
+        gradoSeleccionado: "", // Inicializar el estado del grado seleccionado
+    });
+
+    // Estado para mostrar la contraseña
+    const [mostrarContrasena, setMostrarContrasena] = useState(false);
+
+    // Estado para aceptar términos
+    const [aceptarTerminos, setAceptarTerminos] = useState(false);
+
+    // Manejar cambios en los campos del formulario principal
+    const handleInputChange = (field: string, value: string) => {
         setFormData({
             ...formData,
             [field]: value
         });
     };
 
-    const toggleMostrarContrasena = () => {
-        setFormData({
-          ...formData,
-          mostrarContrasena: !formData.mostrarContrasena
+    // Manejar cambios en los campos adicionales
+    const handleAdditionalFieldsChange = (field: keyof AdditionalFields, value: string | boolean) => {
+        setAdditionalFields({
+            ...additionalFields,
+            [field]: value
         });
-      };
-
-    const handleSubmit = () => {
-        // Aquí puedes enviar formData al servidor o realizar otra acción
-        console.log(formData);
     };
+
+    // Alternar la visibilidad de la contraseña
+    const toggleMostrarContrasena = () => {
+        setMostrarContrasena(!mostrarContrasena);
+    };
+
+    // Manejar envío del formulario
+    const handleSubmit = () => {
+        // Validar si las contraseñas coinciden
+        if (additionalFields.crearContrasena !== additionalFields.confirmarContrasena) {
+            alert('Las contraseñas no coinciden');
+            return;
+        }
+
+        // Validar que todos los campos obligatorios estén llenos
+        for (const key in formData) {
+            if (Object.prototype.hasOwnProperty.call(formData, key)) {
+                if ((formData as any)[key] === '') {
+                    alert('Todos los campos son obligatorios');
+                    return;
+                }
+            }
+        }
+
+        // Si pasa todas las validaciones, se envía la solicitud
+        crearUsuarioPeticion();
+    };
+
+    // Enviar solicitud al servidor
+    const crearUsuarioPeticion = async () => {
+        try {
+            const res = await api.post('/universidad/crear_estudiante/', { ...formData, ...additionalFields });
+            console.log(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    interface Colegio {
+        id: number,
+        nombre_colegio: string;
+        direccion: string;
+        telefono_contacto: string;
+        correo_electronico: string;
+        direccion_web: string;
+        cod_departamento: string;
+        cod_municipio: string;
+    }
+
+    const [colegios, setColegios] = useState<Colegio[]>([]);
+
+    const ObtenerColeguios = async () => {
+        try {
+            const res = await api.get('/universidad/obtener_colegio/');
+            setColegios(res.data.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    interface Grado {
+  
+        nombre_grado: string;
+        numero_sub_grado:string
+    }
+
+    const [grados, setGrados] = useState<Grado[]>([]);
+
+    const ObtenerGrados = async () => {
+        try {
+            const res = await api.get('/universidad/obtener_grado/');
+            setGrados(res.data.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        ObtenerColeguios();
+        ObtenerGrados(); // Obtener los grados al montar el componente
+    }, []);
 
     return (
         <Grid
             container
+            spacing={2}
             sx={{
                 position: 'relative',
                 background: '#FAFAFA',
@@ -66,268 +158,126 @@ export const PantallaPrincipalUsuario = () => {
                 <Title title="Registro de Usuario" />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Nombres"
-                    value={formData.nombres}
-                    onChange={(e) => handleInputChange('nombres', e.target.value)}
-                />
-            </Grid>
+            {/* Renderizar campos del formulario principal */}
+            {Object.entries(formData).map(([key, value]) => (
+                <Grid key={key} item xs={12} sm={6} md={4} >
+                    <TextField
+                        fullWidth
+                        style={{ marginTop: 15 }}
+                        variant="outlined"
+                        label={key.replace(/_/g, ' ')}
+                        value={value}
+                        onChange={(e) => handleInputChange(key, e.target.value)}
+                    />
+                </Grid>
+            ))}
 
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Apellidos"
-                    value={formData.apellidos}
-                    onChange={(e) => handleInputChange('apellidos', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Teléfono"
-                    value={formData.telefono}
-                    onChange={(e) => handleInputChange('telefono', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Celular"
-                    value={formData.celular}
-                    onChange={(e) => handleInputChange('celular', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Tipo de Documento"
-                    value={formData.tipoDocumento}
-                    onChange={(e) => handleInputChange('tipoDocumento', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Número de Documento"
-                    value={formData.numeroDocumento}
-                    onChange={(e) => handleInputChange('numeroDocumento', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <FormControl fullWidth style={{ marginTop: 15,width:"95%" }}>
-                    <InputLabel id="tipo-usuario-label">Tipo de Usuario</InputLabel>
+            {/* Campo para seleccionar el colegio */}
+            <Grid item xs={12} sm={6} >
+                <FormControl fullWidth variant="outlined" style={{ marginTop: 15 }}>
+                    <InputLabel id="select-colegio-label">Colegio</InputLabel>
                     <Select
-                        labelId="tipo-usuario-label"
-                        value={formData.tipoUsuario}
-                        onChange={(e) => handleInputChange('tipoUsuario', e.target.value)}
+                        labelId="select-colegio-label"
+                        id="select-colegio"
+                        value={additionalFields.colegioSeleccionado}
+                        onChange={(e) => handleAdditionalFieldsChange('colegioSeleccionado', e.target.value as string)}
+                        label="Colegio"
                     >
-                        <MenuItem value="estudiante">Estudiante</MenuItem>
-                        <MenuItem value="docente">Docente</MenuItem>
-                        <MenuItem value="administrativo">Administrativo</MenuItem>
+                        {colegios.map((colegio) => (
+                            <MenuItem key={colegio.id} value={colegio.id}>{colegio.nombre_colegio}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-                <FormControl fullWidth style={{ marginTop: 15,width:"95%" }}>
-                    <InputLabel id="genero-label">Género</InputLabel>
+            {/* Campo para seleccionar el grado */}
+            <Grid item xs={12} sm={6} >
+                <FormControl fullWidth variant="outlined" style={{ marginTop: 15 }}>
+                    <InputLabel id="select-grado-label">Grado</InputLabel>
                     <Select
-                        labelId="genero-label"
-                        value={formData.genero}
-                        onChange={(e) => handleInputChange('genero', e.target.value)}
+                        labelId="select-grado-label"
+                        id="select-grado"
+                        value={additionalFields.gradoSeleccionado}
+                        onChange={(e) => handleAdditionalFieldsChange('gradoSeleccionado', e.target.value as string)}
+                        label="Grado"
                     >
-                        <MenuItem value="masculino">Masculino</MenuItem>
-                        <MenuItem value="femenino">Femenino</MenuItem>
-                        <MenuItem value="otro">Otro</MenuItem>
+                        {grados.map((grado) => (
+                            <MenuItem key={grado.numero_sub_grado} value={grado.numero_sub_grado}>{grado.nombre_grado}</MenuItem>
+                        ))}
                     </Select>
                 </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Ocupación"
-                    value={formData.ocupacion}
-                    onChange={(e) => handleInputChange('ocupacion', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"95%" }}
-                    variant="outlined"
-                    label="Fecha de Nacimiento"
-                    type="date"
-                    value={formData.fecha_nacimiento}
-                    onChange={(e) => handleInputChange('fecha_nacimiento', e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                />
-            </Grid>
-
+            {/* Campo para crear contraseña */}
             <Grid item xs={12}>
                 <TextField
                     fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
+                    style={{ marginTop: 15, width: "80%" }}
                     variant="outlined"
-                    label="Correo Electrónico"
-                    value={formData.correoElectronico}
-                    onChange={(e) => handleInputChange('correoElectronico', e.target.value)}
+                    label="Crear Contraseña"
+                    type={mostrarContrasena ? 'text' : 'password'}
+                    value={additionalFields.crearContrasena}
+                    onChange={(e) => handleAdditionalFieldsChange('crearContrasena', e.target.value)}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={toggleMostrarContrasena}
+                                    edge="end"
+                                >
+                                    {mostrarContrasena ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
                 />
             </Grid>
 
+            {/* Campo para confirmar contraseña */}
             <Grid item xs={12}>
                 <TextField
                     fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
+                    style={{ marginTop: 15, width: "80%" }}
                     variant="outlined"
-                    label="País"
-                    value={formData.pais}
-                    onChange={(e) => handleInputChange('pais', e.target.value)}
+                    label="Confirmar Contraseña"
+                    type="password"
+                    value={additionalFields.confirmarContrasena}
+                    onChange={(e) => handleAdditionalFieldsChange('confirmarContrasena', e.target.value)}
                 />
             </Grid>
 
+            {/* Campo para tipo de usuario */}
             <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
-                    variant="outlined"
-                    label="Departamento"
-                    value={formData.departamento}
-                    onChange={(e) => handleInputChange('departamento', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
-                    variant="outlined"
-                    label="Municipio"
-                    value={formData.municipio}
-                    onChange={(e) => handleInputChange('municipio', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
-                    variant="outlined"
-                    label="Código Postal"
-                    value={formData.codigoPostal}
-                    onChange={(e) => handleInputChange('codigoPostal', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
-                    variant="outlined"
-                    label="Dirección"
-                    value={formData.direccion}
-                    onChange={(e) => handleInputChange('direccion', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
-                    variant="outlined"
-                    label="Nombre del Familiar"
-                    value={formData.nombreFamiliar}
-                    onChange={(e) => handleInputChange('nombreFamiliar', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"98%" }}
-                    variant="outlined"
-                    label="Celular del Familiar"
-                    value={formData.celularFamiliar}
-                    onChange={(e) => handleInputChange('celularFamiliar', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15,width:"100%" }}
-                    variant="outlined"
-                    label="Parentesco"
-                    value={formData.parentesco}
-                    onChange={(e) => handleInputChange('parentesco', e.target.value)}
-                />
-            </Grid>
-
-            <Grid item xs={12}>
-                <FormControl fullWidth style={{ marginTop: 15,width:"98%" }}>
-                    <InputLabel id="crear-usuario-label">Crear Usuario</InputLabel>
-                    <Select
-                        labelId="crear-usuario-label"
-                        value={formData.crearUsuario}
-                        onChange={(e) => handleInputChange('crearUsuario', e.target.value)}
-                    >
-                        <MenuItem value="si">Sí</MenuItem>
-                        <MenuItem value="no">No</MenuItem>
-                    </Select>
+                <FormControl style={{ marginTop: 15 }}>
+                    <Switch
+                        color="primary"
+                        checked={additionalFields.tipoUsuario}
+                        onChange={(e) => handleAdditionalFieldsChange('tipoUsuario', e.target.checked)}
+                    />
                 </FormControl>
+                <Typography style={{marginTop:5}}> {additionalFields.tipoUsuario ? 'Confirmado' : 'No confirmado'} </Typography>
             </Grid>
 
+            {/* Campo para aceptar términos y condiciones */}
             <Grid item xs={12}>
-        <TextField
-          fullWidth
-          style={{ marginTop: 15 }}
-          variant="outlined"
-          label="Crear Contraseña"
-          type={formData.mostrarContrasena ? 'text' : 'password'} // Tipo de entrada condicional según el estado mostrarContrasena
-          value={formData.crearContrasena}
-          onChange={(e) => handleInputChange('crearContrasena', e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={toggleMostrarContrasena}
-                  edge="end"
-                >
-                  {formData.mostrarContrasena ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
-      </Grid>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={aceptarTerminos}
+                            onChange={(e) => setAceptarTerminos(e.target.checked)}
+                            color="primary"
+                        />
+                    }
+                    label="Aceptar Términos y Condiciones"
+                />
+            </Grid>
 
-            <Grid item container justifyContent="flex-end">
+            {/* Botón de guardar */}
+            <Grid item xs={12} container justifyContent="center">
                 <Grid item xs={12} sm={5} md={4}>
                     <Button
                         style={{ margin: 8 }}
-                        color="primary"
+                        color="success"
                         variant="contained"
                         startIcon={<ArrowForwardIcon />}
                         onClick={handleSubmit}
@@ -338,4 +288,4 @@ export const PantallaPrincipalUsuario = () => {
             </Grid>
         </Grid>
     );
-}
+};
