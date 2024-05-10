@@ -20,7 +20,7 @@ const images = [
     route: '/Inicio/libros'
   },
   {
-    url: '/image/menu/buscarlibro.webp',
+    url: '/image/menu/reportes.jpg',
     title: 'Reportes',
     route: '/Inicio/resumen_estadistico'
   },
@@ -30,7 +30,7 @@ const images = [
     route: '/Inicio/confiduracion_datos'
   },
   {
-    url: '/image/menu/configurardatos.webp',
+    url: '/image/menu/buscarlector.jpg',
     title: 'Buscar lectores ',
     route: '/Inicio/confiduracion_datos'
   },
@@ -114,7 +114,7 @@ export const ButtonBaseDemo = () => {
     <Grid container>
       {images.map((image, index) => (
         <Grid item xs={12} sm={6} md={4} key={index} onClick={() => navigate(image.route)}>
-          <ImageButton  style={{ width: '95%' ,margin:6,height:350}}>
+          <ImageButton  style={{ width: '95%' ,margin:6,height:280}}>
             <ImageSrc style={{ backgroundImage: `url(${image.url})` }} />
             <ImageBackdrop className="MuiImageBackdrop-root" />
             <Image>
