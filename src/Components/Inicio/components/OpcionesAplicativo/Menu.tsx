@@ -32,7 +32,7 @@ const images = [
   {
     url: '/image/menu/buscarlector.jpg',
     title: 'Buscar lectores ',
-    route: '/Inicio/confiduracion_datos'
+    route: '/Inicio/BuscarLector'
   },
   
 ];

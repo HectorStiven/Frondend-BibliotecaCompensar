@@ -1,116 +1,135 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, TextField, Button, Switch, FormControlLabel, FormControl, Checkbox, InputAdornment, IconButton, InputLabel, Select, MenuItem, Typography } from '@mui/material';
+import { Grid, TextField, Button, Switch, FormControlLabel, Checkbox, InputLabel, Select, MenuItem, Typography, FormControl } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../Elements/Titulo/Titulo';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { api } from '../../../../api/Axios';
 
-// Definición de los campos adicionales
-interface AdditionalFields {
-    crearContrasena: string;
-    confirmarContrasena: string;
-    tipoUsuario: boolean;
-    colegioSeleccionado: string;
-    gradoSeleccionado: string; // Nuevo campo para el grado seleccionado
+// Definición de las interfaces
+interface FormData {
+    numero_identidad: string;
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    edad: number;
+    fecha_nacimiento: string | null;
+    correo_electronico: string;
+    numero_celular: string;
 }
 
+interface AdditionalFields {
+    tipoDocumento: string;
+    tipoGenero: string;
+    tipoUsuario: boolean;
+    colegioSeleccionado: string;
+    gradoSeleccionado: string;
+}
+
+interface Colegio {
+    id: number,
+    nombre_colegio: string;
+}
+
+interface TipoDocumento {
+    id: number;
+    nombre_codigo: string;
+}
+
+interface Genero {
+    id: number;
+    nombre_Genero: string;
+}
+
+interface Grado {
+    nombre_grado: string;
+    numero_sub_grado: string;
+}
+
+// Estado inicial de los datos del formulario
+const initialFormData: FormData = {
+    numero_identidad: "",
+    primer_nombre: "",
+    segundo_nombre: "",
+    primer_apellido: "",
+    segundo_apellido: "",
+    edad: 0,
+    fecha_nacimiento: null,
+    correo_electronico: "",
+    numero_celular: "",
+};
+
+// Estado inicial de los campos adicionales
+const initialAdditionalFields: AdditionalFields = {
+    tipoDocumento: '',
+    tipoGenero: '',
+    tipoUsuario: false,
+    colegioSeleccionado: "",
+    gradoSeleccionado: "",
+};
+
 export const PantallaPrincipalUsuario = () => {
-    // Estado del formulario
-    const [formData, setFormData] = useState({
-        numero_identidad: "",
-        primer_nombre: "",
-        segundo_nombre: "",
-        primer_apellido: "",
-        segundo_apellido: "",
-        edad: 0,
-        fecha_nacimiento: "",
-        correo_electronico: "",
-        numero_celular: "",
-    });
-
-    // Estado de los campos adicionales
-    const [additionalFields, setAdditionalFields] = useState<AdditionalFields>({
-        crearContrasena: '',
-        confirmarContrasena: '',
-        tipoUsuario: false,
-        colegioSeleccionado: "",
-        gradoSeleccionado: "", // Inicializar el estado del grado seleccionado
-    });
-
-    // Estado para mostrar la contraseña
-    const [mostrarContrasena, setMostrarContrasena] = useState(false);
-
-    // Estado para aceptar términos
+    
+    // Estados del formulario y campos adicionales
+    const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [additionalFields, setAdditionalFields] = useState<AdditionalFields>(initialAdditionalFields);
+    const [colegios, setColegios] = useState<Colegio[]>([]);
+    const [tiposDocumento, setTiposDocumento] = useState<TipoDocumento[]>([]);
+    const [generos, setGeneros] = useState<Genero[]>([]);
+    const [grados, setGrados] = useState<Grado[]>([]);
     const [aceptarTerminos, setAceptarTerminos] = useState(false);
 
-    // Manejar cambios en los campos del formulario principal
-    const handleInputChange = (field: string, value: string) => {
-        setFormData({
-            ...formData,
-            [field]: value
-        });
+    // Función para manejar cambios en los campos del formulario principal
+    const handleInputChange = (field: keyof FormData, value: string | Date) => {
+        setFormData({ ...formData, [field]: value });
     };
 
-    // Manejar cambios en los campos adicionales
+    // Función para manejar cambios en los campos adicionales
     const handleAdditionalFieldsChange = (field: keyof AdditionalFields, value: string | boolean) => {
-        setAdditionalFields({
-            ...additionalFields,
-            [field]: value
-        });
+        setAdditionalFields({ ...additionalFields, [field]: value });
     };
 
-    // Alternar la visibilidad de la contraseña
-    const toggleMostrarContrasena = () => {
-        setMostrarContrasena(!mostrarContrasena);
-    };
-
-    // Manejar envío del formulario
+    // Función para enviar el formulario
     const handleSubmit = () => {
-        // Validar si las contraseñas coinciden
-        if (additionalFields.crearContrasena !== additionalFields.confirmarContrasena) {
-            alert('Las contraseñas no coinciden');
-            return;
-        }
-
         // Validar que todos los campos obligatorios estén llenos
         for (const key in formData) {
-            if (Object.prototype.hasOwnProperty.call(formData, key)) {
-                if ((formData as any)[key] === '') {
-                    alert('Todos los campos son obligatorios');
-                    return;
-                }
+            if (!formData[key as keyof FormData]) {
+                alert('Todos los campos son obligatorios');
+                return;
             }
         }
-
         // Si pasa todas las validaciones, se envía la solicitud
         crearUsuarioPeticion();
     };
 
-    // Enviar solicitud al servidor
+    // Función para enviar la solicitud al servidor
     const crearUsuarioPeticion = async () => {
         try {
-            const res = await api.post('/universidad/crear_estudiante/', { ...formData, ...additionalFields });
+            const data = {
+                colegio: additionalFields.colegioSeleccionado,
+                correo_electronico: formData.correo_electronico,
+                edad: formData.edad,
+                fecha_nacimiento: formData.fecha_nacimiento,
+                id_grado: additionalFields.gradoSeleccionado,
+                numero_celular: formData.numero_celular,
+                numero_identidad: formData.numero_identidad,
+                pertenece_colegio: additionalFields.tipoUsuario,
+                primer_apellido: formData.primer_apellido,
+                primer_nombre: formData.primer_nombre,
+                segundo_apellido: formData.segundo_apellido,
+                segundo_nombre: formData.segundo_nombre,
+                tipo_documento: additionalFields.tipoDocumento,
+                tipo_genero: additionalFields.tipoGenero
+              };
+            const res = await api.post('/universidad/crear_estudiante/', data);
             console.log(res.data);
         } catch (error) {
             console.error(error);
         }
     };
 
-    interface Colegio {
-        id: number,
-        nombre_colegio: string;
-        direccion: string;
-        telefono_contacto: string;
-        correo_electronico: string;
-        direccion_web: string;
-        cod_departamento: string;
-        cod_municipio: string;
-    }
 
-    const [colegios, setColegios] = useState<Colegio[]>([]);
-
-    const ObtenerColeguios = async () => {
+    // Obtener colegios
+    const obtenerColegios = async () => {
         try {
             const res = await api.get('/universidad/obtener_colegio/');
             setColegios(res.data.data);
@@ -119,15 +138,28 @@ export const PantallaPrincipalUsuario = () => {
         }
     };
 
-    interface Grado {
-  
-        nombre_grado: string;
-        numero_sub_grado:string
-    }
+    // Obtener tipos de documento
+    const obtenerTiposDocumento = async () => {
+        try {
+            const res = await api.get('/universidad/listar_tipo_documento/');
+            setTiposDocumento(res.data.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-    const [grados, setGrados] = useState<Grado[]>([]);
+    // Obtener géneros
+    const obtenerGeneros = async () => {
+        try {
+            const res = await api.get('/universidad/listar_genero/');
+            setGeneros(res.data.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-    const ObtenerGrados = async () => {
+    // Obtener grados
+    const obtenerGrados = async () => {
         try {
             const res = await api.get('/universidad/obtener_grado/');
             setGrados(res.data.data);
@@ -136,15 +168,18 @@ export const PantallaPrincipalUsuario = () => {
         }
     };
 
+    // Obtener datos iniciales al cargar el componente
     useEffect(() => {
-        ObtenerColeguios();
-        ObtenerGrados(); // Obtener los grados al montar el componente
+        obtenerColegios();
+        obtenerTiposDocumento();
+        obtenerGeneros();
+        obtenerGrados();
     }, []);
 
     return (
         <Grid
             container
-            spacing={2}
+            spacing={0}
             sx={{
                 position: 'relative',
                 background: '#FAFAFA',
@@ -161,14 +196,29 @@ export const PantallaPrincipalUsuario = () => {
             {/* Renderizar campos del formulario principal */}
             {Object.entries(formData).map(([key, value]) => (
                 <Grid key={key} item xs={12} sm={6} md={4} >
-                    <TextField
-                        fullWidth
-                        style={{ marginTop: 15 }}
-                        variant="outlined"
-                        label={key.replace(/_/g, ' ')}
-                        value={value}
-                        onChange={(e) => handleInputChange(key, e.target.value)}
-                    />
+                    {key === 'fecha_nacimiento' ? (
+                        <TextField
+                            label="Fecha de Nacimiento"
+                            type="date"
+                            value={typeof value === 'string' ? value : value ? value : ''}
+                            onChange={(e) => handleInputChange(key as keyof FormData, e.target.value)}
+                            fullWidth
+                            style={{ marginTop: 15,width:"95%" }}
+                            variant="outlined"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    ) : (
+                        <TextField
+                            fullWidth
+                            style={{ marginTop: 15,width:"95%" }}
+                            variant="outlined"
+                            label={key.replace(/_/g, ' ')}
+                            value={value}
+                            onChange={(e) => handleInputChange(key as keyof FormData, e.target.value)}
+                        />
+                    )}
                 </Grid>
             ))}
 
@@ -182,6 +232,7 @@ export const PantallaPrincipalUsuario = () => {
                         value={additionalFields.colegioSeleccionado}
                         onChange={(e) => handleAdditionalFieldsChange('colegioSeleccionado', e.target.value as string)}
                         label="Colegio"
+                        style={{width:"95%"}}
                     >
                         {colegios.map((colegio) => (
                             <MenuItem key={colegio.id} value={colegio.id}>{colegio.nombre_colegio}</MenuItem>
@@ -200,6 +251,7 @@ export const PantallaPrincipalUsuario = () => {
                         value={additionalFields.gradoSeleccionado}
                         onChange={(e) => handleAdditionalFieldsChange('gradoSeleccionado', e.target.value as string)}
                         label="Grado"
+                        style={{width:"100%"}}
                     >
                         {grados.map((grado) => (
                             <MenuItem key={grado.numero_sub_grado} value={grado.numero_sub_grado}>{grado.nombre_grado}</MenuItem>
@@ -208,42 +260,43 @@ export const PantallaPrincipalUsuario = () => {
                 </FormControl>
             </Grid>
 
-            {/* Campo para crear contraseña */}
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15, width: "80%" }}
-                    variant="outlined"
-                    label="Crear Contraseña"
-                    type={mostrarContrasena ? 'text' : 'password'}
-                    value={additionalFields.crearContrasena}
-                    onChange={(e) => handleAdditionalFieldsChange('crearContrasena', e.target.value)}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    onClick={toggleMostrarContrasena}
-                                    edge="end"
-                                >
-                                    {mostrarContrasena ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                </IconButton>
-                            </InputAdornment>
-                        )
-                    }}
-                />
+            {/* Campo para tipo de documento */}
+            <Grid item xs={12} sm={6}>
+                <FormControl fullWidth variant="outlined" style={{ marginTop: 15 }}>
+                    <InputLabel id="select-tipo-documento-label">Tipo de Documento</InputLabel>
+                    <Select
+                        labelId="select-tipo-documento-label"
+                        id="select-tipo-documento"
+                        value={additionalFields.tipoDocumento}
+                        onChange={(e) => handleAdditionalFieldsChange('tipoDocumento', e.target.value as string)}
+                        label="Tipo de Documento"
+                        style={{width:"95%"}}
+                    >
+                        {tiposDocumento.map((tipoDocumento) => (
+                            <MenuItem key={tipoDocumento.id} value={tipoDocumento.id}>{tipoDocumento.nombre_codigo}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Grid>
 
-            {/* Campo para confirmar contraseña */}
-            <Grid item xs={12}>
-                <TextField
-                    fullWidth
-                    style={{ marginTop: 15, width: "80%" }}
-                    variant="outlined"
-                    label="Confirmar Contraseña"
-                    type="password"
-                    value={additionalFields.confirmarContrasena}
-                    onChange={(e) => handleAdditionalFieldsChange('confirmarContrasena', e.target.value)}
-                />
+
+            {/* Campo para tipo de género */}
+            <Grid item xs={12} sm={6} >
+                <FormControl fullWidth variant="outlined" style={{ marginTop: 15 }}>
+                    <InputLabel id="select-tipo-genero-label">Tipo de Género</InputLabel>
+                    <Select
+                        labelId="select-tipo-genero-label"
+                        id="select-tipo-genero"
+                        value={additionalFields.tipoGenero}
+                        onChange={(e) => handleAdditionalFieldsChange('tipoGenero', e.target.value as string)}
+                        label="Tipo de Género"
+                        style={{width:"100%"}}
+                    >
+                        {generos.map((genero) => (
+                            <MenuItem key={genero.id} value={genero.id}>{genero.nombre_Genero}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Grid>
 
             {/* Campo para tipo de usuario */}
@@ -255,7 +308,7 @@ export const PantallaPrincipalUsuario = () => {
                         onChange={(e) => handleAdditionalFieldsChange('tipoUsuario', e.target.checked)}
                     />
                 </FormControl>
-                <Typography style={{marginTop:5}}> {additionalFields.tipoUsuario ? 'Confirmado' : 'No confirmado'} </Typography>
+                <Typography style={{ marginTop: 5 }}> {additionalFields.tipoUsuario ? 'Confirmado' : 'No confirmado'} </Typography>
             </Grid>
 
             {/* Campo para aceptar términos y condiciones */}

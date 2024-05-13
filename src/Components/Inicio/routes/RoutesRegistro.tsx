@@ -5,6 +5,7 @@ import { PantallaPrincipalUsuario } from '../components/Usuario/PantallaPrincipa
 import { Inicio } from '../Inicio';
 import { PantallaPrincipalBiblioteca } from '../Biblioteca/screens/PantallaPrincipalBiblioteca';
 import { ResumenEstadisticoScreen } from '../components/ResumenEstadistivo/ResumenEstadisticoScreen';
+import { BuscarLector } from '../components/BuscarLector/BuscarLector';
 
 
 export const RoutesInicio = () => {
@@ -16,6 +17,9 @@ export const RoutesInicio = () => {
       <Route path="/confiduracion_datos" element={<>confiduracion_datos</>} /> {/* Subruta 2 */}
       <Route path="/Libros" element={<Libros />} />
       <Route path="/Biblioteca" element={<PantallaPrincipalBiblioteca />} />
+      <Route path="/BuscarLector" element={<BuscarLector />} />
+
+      
       
     </Routes>
   );
