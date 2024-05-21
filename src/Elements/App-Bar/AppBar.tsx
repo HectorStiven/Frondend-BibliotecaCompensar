@@ -127,7 +127,7 @@ export const ResponsiveAppBar = ({ set_entrar_aplicacion }: any) => {
                                 textDecoration: 'none',
                             }}
                         >
-                            PLANTILLA 2
+                            Cofrem
                         </Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                             {pages.map((page) => (

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Grid } from "@mui/material";
-import { api } from "../../../api/Axios";
 import { Chip } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import SearchIcon from '@mui/icons-material/Search';
@@ -12,12 +11,12 @@ export const SolicitudesFinalizadas = () => {
   const [filtroLibro, setFiltroLibro] = useState("");
 
   const fetchSolicitudesActivas = async () => {
-    try {
-      const res = await api.get('/universidad/obtener_prestamo/');
-      setSolicitudes(res.data.data);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   const res = await api.get('/universidad/obtener_prestamo/');
+    //   setSolicitudes(res.data.data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   useEffect(() => {
@@ -25,17 +24,18 @@ export const SolicitudesFinalizadas = () => {
   }, []);
 
   const handleBuscar = async () => {
-    try {
-      const res = await api.get('/universidad/obtener_prestamo/', {
-        params: {
-          estudiante: filtroEstudiante,
-          libro: filtroLibro
-        }
-      });
-      setSolicitudes(res.data.data);
-    } catch (error) {
-      console.error(error);
-    }
+    setSolicitudes([])
+    // try {
+    //   const res = await api.get('/universidad/obtener_prestamo/', {
+    //     params: {
+    //       estudiante: filtroEstudiante,
+    //       libro: filtroLibro
+    //     }
+    //   });
+    //   setSolicitudes(res.data.data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   const columns: GridColDef[] = [
