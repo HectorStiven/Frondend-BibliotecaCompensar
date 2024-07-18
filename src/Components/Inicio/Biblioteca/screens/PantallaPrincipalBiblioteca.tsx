@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, FormControl, Grid, InputLabel, Select, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from "../../../../Elements/Titulo/Titulo";
 import { api } from "../../../../api/Axios";
@@ -11,6 +10,12 @@ import { download_pdf } from "../../../../Elements/DescargarDocumentos/PDF_desca
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Chip from '@mui/material/Chip';
+import { useDispatch } from "react-redux";
+import { setIdLibro, setNombre } from "../Toolkit/slice/libroPersonaSlice ";
+import { ModalMasInformacionDetalleLibro } from "../components/ModalMasInformacionDetalleLibro/ModalMasInformacionDetalleLibro";
+import { DataGrid, GridColDef } from "@mui/x-data-grid"; // Importamos GridValueGetter en lugar de GridValueGetterParams
+import { Libro } from "../interface/LibroInterfaz";
+import { useInformacionRowContext } from "../context/InformacionRowContext";
 
 const initialData = {
   tipoSolicitud: '',
@@ -20,42 +25,29 @@ const initialData = {
   estado: ''
 }
 
-interface Libro {
-  idISBN: string;
-  titulo: string;
-  disponibleEnBiblioteca: boolean;
-  agno_publicacion?: number | null;
-  descripcion?: string | null;
-  estado_libro: boolean;
-  cantidad_copias: number;
-  categoriaLibro?: {
-    id: number;
-    nombre_categoria: string;
-    otra_categoria_cual: string;
-  } | null;
-  Editorial?: {
-    id: number;
-    nombre: string;
-  } | null;
-  id_Autor?: {
-    id: number;
-    primer_nombre: string;
-    segundo_nombre?: string | null;
-    primer_apellido: string;
-    fecha_nacimiento: string; // O puedes usar Date si prefieres
-    correo_electronico: string;
-    numero_celular: string;
-  } | null;
-  id_estante?: string | null;
-}
-
-
 
 
 export const PantallaPrincipalBiblioteca = () => {
+  
   const [formData, setFormData] = useState(initialData);
   const [libros, setLibros] = useState<Libro[]>([]);
+  const { setLibroSeleccionado } = useInformacionRowContext();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
+  const handleSetIdLibro = (rowData: any) => {
+    const {    idISBN,titulo } = rowData; // Suponiendo que `rowData` contiene el ID, nombre del libro y nombre del estudiante
+
+ 
+    dispatch(setIdLibro(idISBN)); // Set id_libro with input value
+    dispatch(setNombre(titulo)); // Set id_libro with input value
+
+    navigate(
+      "/Prestamos"
+    );
+  };
+
 
   const handleInputChange = (field: keyof typeof initialData, value: string) => {
     setFormData({
@@ -78,35 +70,41 @@ export const PantallaPrincipalBiblioteca = () => {
   }, []);
 
   const columns: GridColDef[] = [
-    { field: "idISBN", headerName: "ID del ISBN", flex: 1 },
+
     { field: "titulo", headerName: "Título", flex: 1 },
     {
       field: "disponibleEnBiblioteca",
-      headerName: "Disponible en Biblioteca",
-      flex: 1,
+      headerName: "Disponible",
+      flex: 0.6,
       renderCell: (params) => (
         <Chip
           label={params.value ? "Sí" : "No"}
           color={params.value ? "success" : "error"}
         />
       ),
-    }, { field: "agno_publicacion", headerName: "Año de Publicación", flex: 1 },
-    { field: "descripcion", headerName: "Descripción", flex: 1 },
+    },
+    {
+      field: "categoriaLibro",
+      headerName: "Categoría",
+      flex: 1,
+      renderCell: (params: any) =>
+        params.row?.categoriaLibro?.nombre_categoria || "",
+    },
     {
       field: "estado_libro",
       headerName: "Estado del Libro",
-      flex: 1,
+      flex: 0.8,
       renderCell: (params) => (
         <Chip
-          label={params.value ? "Disponible" : "No disponible"}
+          label={params.value ? "Bueno" : "Malo"}
           color={params.value ? "success" : "error"}
         />
       ),
     },
     {
       field: "cantidad_copias",
-      headerName: "Cantidad de Copias",
-      flex: 1,
+      headerName: "Copias",
+      flex: 0.5,
       renderCell: (params) => (
         <Chip
           label={params.value}
@@ -120,14 +118,14 @@ export const PantallaPrincipalBiblioteca = () => {
     {
       field: "acciones",
       headerName: "Acciones",
-      flex: 2,
+      flex: 1.1,
       renderCell: (params) => (
         <div>
           <Button
             variant="contained"
             color="primary"
             style={{ backgroundColor: "green", marginRight: 5 }}
-            onClick={() => handleSolicitar(params.row.idISBN)} // Suponiendo que idISBN es el identificador único de cada libro
+            onClick={() => handleSetIdLibro(params.row)} // Suponiendo que idISBN es el identificador único de cada libro
           >
             <SendIcon />
           </Button>
@@ -139,33 +137,15 @@ export const PantallaPrincipalBiblioteca = () => {
           >
             <DeleteIcon />
           </Button>
+          <Button
+            onClick={() => setLibroSeleccionado(params.row)} // Suponiendo que idISBN es el identificador único de cada libro
+          >
+            <ModalMasInformacionDetalleLibro />
+          </Button>
         </div>
       )
     }
-    // {
-    //   field: "categoriaLibro",
-    //   headerName: "Categoría del Libro",
-    //   flex: 1,
-    //   valueGetter: (params) => params.value?.categoriaLibro ? params.value.categoriaLibro.nombre_categoria : ""
-    // },
-    // {
-    //   field: "Editorial",
-    //   headerName: "Editorial",
-    //   flex: 1,
-    //   valueGetter: (params) => params.value?.Editorial ? params.value.Editorial.nombre : ""
-    // },
-    // {
-    //   field: "id_Autor",
-    //   headerName: "ID del Autor",
-    //   flex: 1,
-    //   valueGetter: (params) => params.value?.id_Autor ? params.value.id_Autor.primer_nombre + " " + params.value.id_Autor.primer_apellido : ""
-    // },
-    // { field: "id_estante", headerName: "ID del Estante", flex: 1 },
   ];
-
-  const handleSolicitar = (idISBN: string) => {
-    console.log(`Solicitando libro con ID ISBN: ${idISBN}`);
-  };
 
   const handleEliminar = (idISBN: string) => {
     console.log(`Eliminando libro con ID ISBN: ${idISBN}`);
@@ -302,4 +282,5 @@ export const PantallaPrincipalBiblioteca = () => {
     </>
   );
 };
+
 

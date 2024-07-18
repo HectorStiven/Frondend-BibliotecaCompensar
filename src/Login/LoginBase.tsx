@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, IconButton, Grid, FormControl, Box, Typography, InputLabel, Input, Link } from "@mui/material";
+import { TextField, Button, IconButton, Grid, FormControl, Box, InputLabel, Input, Link } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -7,13 +7,15 @@ import { control_success } from "../Elements/alertas/alertaSucces";
 import { ImagenFondo } from "../Elements/App-Bar/ImagenPortada";
 import { useDispatch } from "react-redux";
 import { login } from "./toolkit/slice/LoginSlice";
-import { Card, TextFieldCompleto, buttonMax, footerSpacing, formControl, mtComponent } from "./Styles/StyleInicio";
 import RegistrarUser from "./Registrarse";
+import LoginIcon from '@mui/icons-material/Login';
+import { Card, TextFieldCompleto, buttonMax, footerSpacing, formControl, mtComponent } from "./Styles/StyleInicio";
+
 
 
 export const LoginBase = ({ set_entrar_aplicacion }: any) => {
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const [usuario, setUsuario] = useState<string>("");
   const [contrasena, setContrasena] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
@@ -64,12 +66,12 @@ export const LoginBase = ({ set_entrar_aplicacion }: any) => {
             <Box sx={Card}>
               <Grid alignItems={"center"} container spacing={0} justifyContent={"space-between"}>
                 <Grid alignItems={"center"} item xs={6} sm={5} md={5} sx={mtComponent}>
-                  <Typography variant="h5">
+                  {/* <Typography variant="h5">
                     Bienvenido,
                     Por favor inicie sesion
-                  </Typography>
-                </Grid>
-                <Grid alignItems={"center"} item xs={6} sm={6} md={5} sx={mtComponent}>
+                  </Typography> */}
+                  </Grid>
+                <Grid  sx={mtComponent}>
                   <img src="../image/Logo-Compensar.png"
                     alt="Logo UCompensar"
                     style={{ width: '100%' }} />
@@ -106,7 +108,7 @@ export const LoginBase = ({ set_entrar_aplicacion }: any) => {
               </Grid>
               <Grid alignItems={"center"} container spacing={1} justifyContent={"space-evenly"} sx={mtComponent}>
                 <Grid alignItems={"center"} item xs={8} sm={5} md={5}>
-                  <Button variant='contained' type="submit" sx={buttonMax}>
+                  <Button  startIcon={<LoginIcon />} variant='contained' type="submit" color="success" sx={buttonMax}>
                     INGRESAR
                   </Button>
                 </Grid>

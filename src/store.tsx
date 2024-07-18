@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import LoginSlice from "./Login/toolkit/slice/LoginSlice";
+import libroPersonaSlice from "./Components/Inicio/Biblioteca/Toolkit/slice/libroPersonaSlice ";
 
 /**
  * Configuration object for persisting state in the application.
@@ -13,11 +14,13 @@ import LoginSlice from "./Login/toolkit/slice/LoginSlice";
 const persistConfiguration = {
   key: "Proyecto-inicial",
   storage: sessionStorage,
-  whitelist: ["auth", "layout"],
+  whitelist: ["auth", "layout", "login", "libroPersona"], // Añadir libroPersona a la lista blanca
 };
 
 const appReducers = combineReducers({
   login: LoginSlice.reducer,
+  libroPersona: libroPersonaSlice, // Añadir el nuevo reducer
+
   // auth: authSlice.reducer,
 });
 

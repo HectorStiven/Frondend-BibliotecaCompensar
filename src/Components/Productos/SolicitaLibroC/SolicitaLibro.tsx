@@ -1,27 +1,36 @@
-import React, { useState } from 'react';
-import { Button, Grid, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, Grid, TextField } from '@mui/material';
 import { Title } from '../../../Elements/Titulo/Titulo';
-import { BuscadorUsuarios } from './BuscadorUsuarios/BuscadorUsuarios';
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { api } from '../../../api/Axios';
 import { control_success } from '../../../Elements/alertas/alertaSucces';
+import { BuscarLector } from '../../Inicio/components/BuscarLector/BuscarLector';
+import { UsuarioRegistrado } from '../../Inicio/components/interfaces/LectorInterfaces';
+import { useSelector } from 'react-redux';
 
-// Estado inicial del formulario
 const initialForm = {
   fecha_prestamo: "",
   fecha_devolucion_libro: "",
   tiempo_devolucion_dias: 0,
-  ya_devuelto: true,
-  fecha_devolucion_real: "",
+  ya_devuelto: false,
+  fecha_devolucion_real: null, // Usar null en lugar de ""
   observaciones_devolucion: "",
   dias_mora: "0",
-  libro: "100001",
+  libro: "",
   estudiante: 0
 };
 
-
 export const SolicitaLibro: React.FC = () => {
+  const [selectedRow, setSelectedRow] = useState<UsuarioRegistrado>();
   const [form, setForm] = useState(initialForm);
+  const idLibro = useSelector((state: any) => state.libroPersona.id_libro);
+  const nombreLibro = useSelector((state: any) => state.libroPersona.nombre_libro);
+
+  useEffect(() => {
+    // Set the current date as the loan date when the component mounts
+    const currentDate = new Date().toISOString().split('T')[0];
+    setForm(prevForm => ({ ...prevForm, fecha_prestamo: currentDate }));
+  }, []);
 
   const handleInputChange = (field: string, value: any) => {
     setForm({
@@ -34,26 +43,87 @@ export const SolicitaLibro: React.FC = () => {
     try {
       const res = await api.post('/universidad/crear_prestamo/', form);
       console.log('Respuesta del servidor:', res.data);
-      control_success('Se solicito correctamente');
-
-      // Maneja la respuesta del servidor aquí, como mostrar un mensaje de éxito
+      control_success('Se solicitó correctamente');
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
-      // Maneja el error aquí, como mostrar un mensaje de error
     }
   };
+
+
+
+  const handleRowSelect = (row: any) => {
+    setSelectedRow(row);
+    console.log('Información de la fila seleccionada:', row);
+    setForm({
+      ...form,
+      estudiante: row.id // Assuming 'id' is the ID of the selected student
+    });
+  };
+
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <BuscadorUsuarios />
-      </Grid>
-      <Grid item xs={12}>
         <Title title="Formulario Solicitud" />
       </Grid>
 
-      {/* Campos del formulario */}
+      <Grid item xs={12}>
+        <BuscarLector onRowSelect={handleRowSelect} />
+      </Grid>
+
+      {selectedRow && (
+        <>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              size="small"
+              variant="outlined"
+              value={selectedRow.primer_nombre}
+              label="Primer Nombre"
+              disabled
+              sx={{ borderRadius: '20px' }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              size="small"
+              variant="outlined"
+              value={selectedRow.numero_celular}
+              label="Número de Celular"
+              disabled
+              sx={{ borderRadius: '20px' }}
+            />
+          </Grid>
+        </>
+      )}
+
       <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          size="small"
+          variant="outlined"
+          disabled
+          value={idLibro}
+          label="ID del libro"
+          onChange={(e) => handleInputChange('libro', e.target.value)}
+          sx={{ borderRadius: '20px' }}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          fullWidth
+          size="small"
+          variant="outlined"
+          disabled
+          value={nombreLibro}
+          label="Nombre del libro"
+          // onChange={(e) => handleInputChange('libro', e.target.value)}
+          sx={{ borderRadius: '20px' }}
+        />
+      </Grid>
+      
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           type="date"
@@ -63,10 +133,11 @@ export const SolicitaLibro: React.FC = () => {
           label="Fecha de préstamo"
           onChange={(e) => handleInputChange('fecha_prestamo', e.target.value)}
           InputLabelProps={{ shrink: true }}
+          disabled
           sx={{ borderRadius: '20px' }}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           type="date"
@@ -79,7 +150,7 @@ export const SolicitaLibro: React.FC = () => {
           sx={{ borderRadius: '20px' }}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={4}>
         <TextField
           fullWidth
           type="number"
@@ -91,36 +162,13 @@ export const SolicitaLibro: React.FC = () => {
           sx={{ borderRadius: '20px' }}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <FormControl fullWidth size="small" variant="outlined">
-          <InputLabel>Ya devuelto</InputLabel>
-          <Select
-            value={form.ya_devuelto}
-            label="Ya devuelto"
-            onChange={(e) => handleInputChange('ya_devuelto', e.target.value === 'true')}
-            sx={{ borderRadius: '0px' }}
-          >
-            <MenuItem value="true">Sí</MenuItem>
-            <MenuItem value="false">No</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={6}>
+
+
+      <Grid item xs={12}>
         <TextField
           fullWidth
-          type="date"
-          size="small"
-          variant="outlined"
-          value={form.fecha_devolucion_real}
-          label="Fecha de devolución real"
-          onChange={(e) => handleInputChange('fecha_devolucion_real', e.target.value)}
-          InputLabelProps={{ shrink: true }}
-          sx={{ borderRadius: '20px' }}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          fullWidth
+          multiline
+          rows={2}
           size="small"
           variant="outlined"
           value={form.observaciones_devolucion}
@@ -129,42 +177,6 @@ export const SolicitaLibro: React.FC = () => {
           sx={{ borderRadius: '20px' }}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          fullWidth
-          type="number"
-          size="small"
-          variant="outlined"
-          value={form.dias_mora}
-          label="Días de mora"
-          onChange={(e) => handleInputChange('dias_mora', e.target.value)}
-          sx={{ borderRadius: '20px' }}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          fullWidth
-          size="small"
-          variant="outlined"
-          value={form.libro}
-          label="ID del libro"
-          onChange={(e) => handleInputChange('libro', e.target.value)}
-          sx={{ borderRadius: '20px' }}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          fullWidth
-          type="number"
-          size="small"
-          variant="outlined"
-          value={form.estudiante}
-          label="ID del estudiante"
-          onChange={(e) => handleInputChange('estudiante', e.target.value)}
-          sx={{ borderRadius: '20px' }}
-        />
-      </Grid>
-
       <Grid item xs={12}>
         <Grid container alignItems="center" justifyContent="center">
           <Grid item xs={12} sm={4}>
