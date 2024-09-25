@@ -8,6 +8,7 @@ import { ResumenEstadisticoScreen } from '../components/ResumenEstadistivo/Resum
 // import { MyComponent } from '../Biblioteca/Toolkit/Probarslice';
 import { InformacionRowProvider } from '../Biblioteca/context/InformacionRowContext';
 import { BusacarLectorScreen } from '../components/BuscarLector/BusacarLectorScreen';
+import { Chatbot } from '../../Chatbot/Chatbot';
 
 
 export const RoutesInicio = () => {
@@ -21,6 +22,8 @@ export const RoutesInicio = () => {
       <Route path="/Libros" element={<Libros />} />
       <Route path="/Biblioteca" element={<PantallaPrincipalBiblioteca />} />
       <Route path="/BuscarLector" element={<BusacarLectorScreen />} />
+      <Route path="/PruebaChat" element={<Chatbot />} />
+
 F
     </Routes>
     </InformacionRowProvider>
