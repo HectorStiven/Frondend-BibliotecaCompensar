@@ -35,8 +35,8 @@ const images = [
     route: '/Inicio/BuscarLector'
   },
   {
-    url: '/image/menu/buscarlector.jpg',
-    title: 'xxxxxxxx ',
+    url: '/image/menu/chatbot.webp',
+    title: 'Chatboot',
     route: '/Inicio/PruebaChat'
   },
   
