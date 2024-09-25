@@ -34,6 +34,11 @@ const images = [
     title: 'Buscar lectores ',
     route: '/Inicio/BuscarLector'
   },
+  {
+    url: '/image/menu/buscarlector.jpg',
+    title: 'xxxxxxxx ',
+    route: '/Inicio/PruebaChat'
+  },
   
 ];
 
