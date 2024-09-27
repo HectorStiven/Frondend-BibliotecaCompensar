@@ -9,6 +9,7 @@ import { ResumenEstadisticoScreen } from '../components/ResumenEstadistivo/Resum
 import { InformacionRowProvider } from '../Biblioteca/context/InformacionRowContext';
 import { BusacarLectorScreen } from '../components/BuscarLector/BusacarLectorScreen';
 import { Chatbot } from '../../Chatbot/Chatbot';
+import { TableroFirma } from '../../BableroFirma/TableroFirma';
 
 
 export const RoutesInicio = () => {
@@ -23,7 +24,7 @@ export const RoutesInicio = () => {
       <Route path="/Biblioteca" element={<PantallaPrincipalBiblioteca />} />
       <Route path="/BuscarLector" element={<BusacarLectorScreen />} />
       <Route path="/PruebaChat" element={<Chatbot />} />
-
+      <Route path="TableroFirma" element={<TableroFirma/>} />
 F
     </Routes>
     </InformacionRowProvider>

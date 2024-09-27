@@ -16,6 +16,7 @@ import { ModalMasInformacionDetalleLibro } from "../components/ModalMasInformaci
 import { DataGrid, GridColDef } from "@mui/x-data-grid"; // Importamos GridValueGetter en lugar de GridValueGetterParams
 import { Libro } from "../interface/LibroInterfaz";
 import { useInformacionRowContext } from "../context/InformacionRowContext";
+import { columns, data } from "./data";
 
 const initialData = {
   tipoSolicitud: '',
@@ -69,7 +70,7 @@ export const PantallaPrincipalBiblioteca = () => {
     fetchLibros();
   }, []);
 
-  const columns: GridColDef[] = [
+  const columnssss: GridColDef[] = [
 
     { field: "titulo", headerName: "Título", flex: 1 },
     {
@@ -247,17 +248,19 @@ export const PantallaPrincipalBiblioteca = () => {
             Buscar
           </Button>
         </Grid>
+        
 
         <Grid item xs={12} style={{ marginTop: 15 }}>
           <ButtonGroup style={{ margin: 7, display: 'flex', justifyContent: 'flex-end' }}>
-            {download_xls({ nurseries: libros, columns })}
-            {download_pdf({ nurseries: libros, columns, title: 'Entradas' })}
+            {download_xls({ nurseries: data, columns })}
+            {download_pdf({ nurseries: data, columns, title: 'Inventario' })}
           </ButtonGroup>
           <DataGrid
-            rows={libros as Libro[]} // Especificar el tipo de rowData como Libro[]
+            rows={data} // Especificar el tipo de rowData como Libro[]
             columns={columns}
             autoHeight
-            getRowId={(row) => row.idISBN}
+            getRowId={(row) => row.cedula}
+            
           />
         </Grid>
 

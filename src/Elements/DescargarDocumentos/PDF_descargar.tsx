@@ -18,7 +18,7 @@ export const download_pdf = ({ nurseries, columns, title }: any): JSX.Element =>
     const handleClick = (): void => {
       const doc = new JsPDF();
   
-      const header_img_data = "../image/naruto.png"; // Asegúrate de que la ruta y el formato de la imagen sean correctos
+      const header_img_data = "../image/naruto.jpg"; // Asegúrate de que la ruta y el formato de la imagen sean correctos
       const img_width = 200;
       const img_height = 80;
       const page_width = doc.internal.pageSize.getWidth();
